@@ -2,11 +2,11 @@
 <h3 align="center"><b>Sharpness-Aware Minimization for Efficiently Improving Generalization</b></h3>
 <p align="center">
   <i>~ in Pytorch ~</i>
-</p> 
- 
---------------
+</p>
 
-<br>
+---
+
+Making modifications to the original code written by https://github.com/davda54 for our research project!! `<br>`
 
 SAM simultaneously minimizes loss value and loss sharpness. In particular, it seeks parameters that lie in **neighborhoods having uniformly low loss**. SAM improves model generalization and yields [SoTA performance for several datasets](https://paperswithcode.com/paper/sharpness-aware-minimization-for-efficiently-1). Additionally, it provides robustness to label noise on par with that provided by SoTA procedures that specifically target learning with noisy labels.
 
@@ -75,7 +75,9 @@ for input, output in data:
 ```
 
 ### Training tips
+
 - [@hjq133](https://github.com/hjq133): The suggested usage can potentially cause problems if you use batch normalization. The running statistics are computed in both forward passes, but they should be computed only for the first one. A possible solution is to set BN momentum to zero (kindly suggested by [@ahmdtaha](https://github.com/ahmdtaha)) to bypass the running statistics during the second pass. An example usage is on lines [51](https://github.com/davda54/sam/blob/cdcbdc1574022d3a3c3240da136378c38562d51d/example/train.py#L51) and [58](https://github.com/davda54/sam/blob/cdcbdc1574022d3a3c3240da136378c38562d51d/example/train.py#L58) in [example/train.py](https://github.com/davda54/sam/blob/cdcbdc1574022d3a3c3240da136378c38562d51d/example/train.py):
+
 ```python
 for batch in dataset.train:
   inputs, targets = (b.to(device) for b in batch)
@@ -94,6 +96,7 @@ for batch in dataset.train:
 ```
 
 - [@evanatyourservice](https://github.com/evanatyourservice): If you plan to train on multiple GPUs, the paper states that *"To compute the SAM update when parallelizing across multiple accelerators, we divide each data batch evenly among the accelerators, independently compute the SAM gradient on each accelerator, and average the resulting sub-batch SAM gradients to obtain the final SAM update."* This can be achieved by the following code:
+
 ```python
 for input, output in data:
   # first forward-backward pass
@@ -106,13 +109,16 @@ for input, output in data:
   loss_function(output, model(input)).backward()
   optimizer.second_step(zero_grad=True)
 ```
-- [@evanatyourservice](https://github.com/evanatyourservice): Adaptive SAM reportedly performs better than the original SAM. The ASAM paper suggests to use higher `rho` for the adaptive updates (~10x larger)
 
+- [@evanatyourservice](https://github.com/evanatyourservice): Adaptive SAM reportedly performs better than the original SAM. The ASAM paper suggests to use higher `rho` for the adaptive updates (~10x larger)
 - [@mlaves](https://github.com/mlaves): LR scheduling should be either applied to the base optimizer or you should use SAM with a single `step` call (with a closure):
+
 ```python
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer.base_optimizer, T_max=200)
 ```
+
 - [@AlbertoSabater](https://github.com/AlbertoSabater): Integration with Pytorch Lightning — you can write the `training_step` function as:
+
 ```python
 def training_step(self, batch, batch_idx):
     optimizer = self.optimizers()
@@ -129,20 +135,20 @@ def training_step(self, batch, batch_idx):
 
     return loss_1
 ```
-<br>
 
+<br>
 
 ## Documentation
 
 #### `SAM.__init__`
 
-| **Argument**    | **Description** |
-| :-------------- | :-------------- |
-| `params` (iterable) | iterable of parameters to optimize or dicts defining parameter groups |
-| `base_optimizer` (torch.optim.Optimizer) | underlying optimizer that does the "sharpness-aware" update |
-| `rho` (float, optional)           | size of the neighborhood for computing the max loss *(default: 0.05)* |
-| `adaptive` (bool, optional)       | set this argument to True if you want to use an experimental implementation of element-wise Adaptive SAM *(default: False)* |
-| `**kwargs` | keyword arguments passed to the `__init__` method of `base_optimizer` |
+| **Argument**                         | **Description**                                                                                                        |
+| :----------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `params` (iterable)                      | iterable of parameters to optimize or dicts defining parameter groups                                                        |
+| `base_optimizer` (torch.optim.Optimizer) | underlying optimizer that does the "sharpness-aware" update                                                                  |
+| `rho` (float, optional)                  | size of the neighborhood for computing the max loss*(default: 0.05)*                                                       |
+| `adaptive` (bool, optional)              | set this argument to True if you want to use an experimental implementation of element-wise Adaptive SAM*(default: False)* |
+| `**kwargs`                               | keyword arguments passed to the `__init__` method of `base_optimizer`                                                    |
 
 <br>
 
@@ -150,9 +156,9 @@ def training_step(self, batch, batch_idx):
 
 Performs the first optimization step that finds the weights with the highest loss in the local `rho`-neighborhood.
 
-| **Argument**    | **Description** |
-| :-------------- | :-------------- |
-| `zero_grad` (bool, optional) | set to True if you want to automatically zero-out all gradients after this step *(default: False)* |
+| **Argument**             | **Description**                                                                               |
+| :----------------------------- | :-------------------------------------------------------------------------------------------------- |
+| `zero_grad` (bool, optional) | set to True if you want to automatically zero-out all gradients after this step*(default: False)* |
 
 <br>
 
@@ -160,9 +166,9 @@ Performs the first optimization step that finds the weights with the highest los
 
 Performs the second optimization step that updates the original weights with the gradient from the (locally) highest point in the loss landscape.
 
-| **Argument**    | **Description** |
-| :-------------- | :-------------- |
-| `zero_grad` (bool, optional) | set to True if you want to automatically zero-out all gradients after this step *(default: False)* |
+| **Argument**             | **Description**                                                                               |
+| :----------------------------- | :-------------------------------------------------------------------------------------------------- |
+| `zero_grad` (bool, optional) | set to True if you want to automatically zero-out all gradients after this step*(default: False)* |
 
 <br>
 
@@ -170,12 +176,9 @@ Performs the second optimization step that updates the original weights with the
 
 Performs both optimization steps in a single call. This function is an alternative to explicitly calling `SAM.first_step` and `SAM.second_step`.
 
-| **Argument**    | **Description** |
-| :-------------- | :-------------- |
-| `closure` (callable) | the closure should do an additional full forward and backward pass on the optimized model *(default: None)* |
-
-
-
+| **Argument**     | **Description**                                                                                        |
+| :--------------------- | :----------------------------------------------------------------------------------------------------------- |
+| `closure` (callable) | the closure should do an additional full forward and backward pass on the optimized model*(default: None)* |
 
 <br>
 
@@ -184,11 +187,10 @@ Performs both optimization steps in a single call. This function is an alternati
 I've verified that SAM works on a simple WRN 16-8 model run on CIFAR10; you can replicate the experiment by running [train.py](example/train.py). The Wide-ResNet is enhanced only by label smoothing and the most basic image augmentations with cutout, so the errors are higher than those in the [SAM paper](https://arxiv.org/abs/2010.01412). Theoretically, you can get even lower errors by running for longer (1800 epochs instead of 200), because SAM shouldn't be as prone to overfitting. SAM uses `rho=0.05`, while ASAM is set to `rho=2.0`, as [suggested by its authors](https://github.com/davda54/sam/issues/37).
 
 | Optimizer             | Test error rate |
-| :-------------------- |   -----: |
-| SGD + momentum        |   3.20 % |
-| SAM + SGD + momentum  |   2.86 % |
-| ASAM + SGD + momentum |   2.55 % |
-
+| :-------------------- | --------------: |
+| SGD + momentum        |          3.20 % |
+| SAM + SGD + momentum  |          2.86 % |
+| ASAM + SGD + momentum |          2.55 % |
 
 <br>
 
