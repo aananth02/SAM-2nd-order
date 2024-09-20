@@ -11,7 +11,7 @@ from utility.step_lr import StepLR
 from utility.bypass_bn import enable_running_stats, disable_running_stats
 
 import sys; sys.path.append("..")
-from sam import SAM
+from sam_ga_implementation import SAM
 # from ssam import SSAM
 
 
@@ -32,6 +32,7 @@ if __name__ == "__main__":
     parser.add_argument("--optim", default="sam", type=str, help="If True then use SAM/ ASAM, else use SGD alone")
     parser.add_argument("--model", default="resnet18", type=str, help="Default model for training")
     parser.add_argument("--num_classes", default=10, type=int, help="Cifar10 has 10 classes")
+    parser.add_argument("--steps", default=1, type=int, help="n in n-step SAM")
     # TODO: Need to add an argument for cifar10
     args = parser.parse_args()
 
@@ -109,12 +110,11 @@ if __name__ == "__main__":
                 predictions = model(inputs)
                 loss = smooth_crossentropy(predictions, targets, smoothing=args.label_smoothing)
                 loss.mean().backward()
-                optimizer.first_step(zero_grad=True)
-
                 if (epoch == args.epochs - 1):
-                    # with torch.no_grad():
-                    #     log(model, loss.cpu(), correct.cpu(), 666)
+                    optimizer.dummy_step(zero_grad=True)
                     loss_epsilon = loss.sum().item() / loss.size(0)
+                    optimizer.undo_dummy(zero_grad=True)
+                optimizer.first_step(n=args.steps, zero_grad=True)
 
                 # second forward-backward step
                 disable_running_stats(model)
@@ -139,4 +139,5 @@ if __name__ == "__main__":
                     log(model, loss.cpu(), correct.cpu())
 
         log.flush()
+        print(f"Sharpness in {args.steps} step SAM")
         print(loss_epsilon)
