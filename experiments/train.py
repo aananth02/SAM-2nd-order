@@ -111,9 +111,9 @@ if __name__ == "__main__":
                 loss = smooth_crossentropy(predictions, targets, smoothing=args.label_smoothing)
                 loss.mean().backward()
                 if (epoch == args.epochs - 1):
-                    optimizer.dummy_step(zero_grad=True)
+                    optimizer.dummy_step(zero_grad=False)
                     loss_epsilon = loss.sum().item() / loss.size(0)
-                    optimizer.undo_dummy(zero_grad=True)
+                    optimizer.undo_dummy(zero_grad=False)
                 optimizer.first_step(n=args.steps, zero_grad=True)
 
                 # second forward-backward step

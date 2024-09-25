@@ -1,0 +1,49 @@
+Traceback (most recent call last):
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/train.py", line 117, in <module>
+    optimizer.first_step(n=args.steps, zero_grad=True)
+  File "/u/aananth2/miniconda3/envs/sam_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 50, in first_step
+    grad_norm = self._grad_norm()
+                ^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 88, in _grad_norm
+    torch.stack([
+RuntimeError: stack expects a non-empty TensorList
+Traceback (most recent call last):
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/train.py", line 117, in <module>
+    optimizer.first_step(n=args.steps, zero_grad=True)
+  File "/u/aananth2/miniconda3/envs/sam_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 50, in first_step
+    grad_norm = self._grad_norm()
+                ^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 88, in _grad_norm
+    torch.stack([
+RuntimeError: stack expects a non-empty TensorList
+Traceback (most recent call last):
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/train.py", line 117, in <module>
+    optimizer.first_step(n=args.steps, zero_grad=True)
+  File "/u/aananth2/miniconda3/envs/sam_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 50, in first_step
+    grad_norm = self._grad_norm()
+                ^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 88, in _grad_norm
+    torch.stack([
+RuntimeError: stack expects a non-empty TensorList
+Traceback (most recent call last):
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/train.py", line 117, in <module>
+    optimizer.first_step(n=args.steps, zero_grad=True)
+  File "/u/aananth2/miniconda3/envs/sam_env/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 50, in first_step
+    grad_norm = self._grad_norm()
+                ^^^^^^^^^^^^^^^^^
+  File "/scratch/bcom/aananth2/SAM-2nd-order/experiments/../sam_ga_implementation.py", line 88, in _grad_norm
+    torch.stack([
+RuntimeError: stack expects a non-empty TensorList
+/var/spool/slurmd/job4892732/slurm_script: line 26: deactivate: No such file or directory
