@@ -15,8 +15,9 @@ class SAM(torch.optim.Optimizer):
     def first_step(self, zero_grad=False):
         grad_norm = self._grad_norm()
         for group in self.param_groups:
-            scale = group["rho"] / (grad_norm + 1e-12)
-
+            scale = group["rho"] / (grad_norm + 1e-12) # remove the scaling
+            # below * p.grad, change it to become a unit vector in a random direction of the same dimensions as p.grad
+            
             for p in group["params"]:
                 if p.grad is None: 
                     continue
