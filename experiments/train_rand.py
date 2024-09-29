@@ -110,9 +110,13 @@ if __name__ == "__main__":
                 predictions = model(inputs)
                 loss = smooth_crossentropy(predictions, targets, smoothing=args.label_smoothing)
                 loss.mean().backward()
-                optimizer.first_step(zero_grad=True)
                 if (epoch == args.epochs - 1):
+                    # Note the sharpness values for train_rand do not make much sense
+                    # I think it has something to do with using random vector in first step
+                    optimizer.dummy_step(zero_grad=False)
                     loss_epsilon = loss.sum().item() / loss.size(0)
+                    optimizer.undo_dummy(zero_grad=False)
+                optimizer.first_step(zero_grad=True)
                 # second forward-backward step
                 disable_running_stats(model)
                 smooth_crossentropy(model(inputs), targets, smoothing=args.label_smoothing).mean().backward()

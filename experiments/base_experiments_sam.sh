@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=SAM_REPRODUCE
-#SBATCH --output=/scratch/bcom/aananth2/SAM-2nd-order/experiments/SAM_WRN_GA_rand_sharpness%x-%A_%a.out
-#SBATCH --error=/scratch/bcom/aananth2/SAM-2nd-order/experiments/SAM_WRN_GA_rand_sharpness%x-%A_%a.err
+#SBATCH --output=/scratch/bcom/aananth2/SAM-2nd-order/experiments/SAM_WRN_GA_avg_rand_sharpness_temp%x-%A_%a.out
+#SBATCH --error=/scratch/bcom/aananth2/SAM-2nd-order/experiments/SAM_WRN_GA_avg_rand_sharpness_temp%x-%A_%a.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=40
 #SBATCH --gpus-per-task=1
@@ -18,6 +18,9 @@ conda activate sam_env
 
 cd /scratch/bcom/aananth2/SAM-2nd-order/experiments/
 
+python train_rand.py --optim sam
+python train_rand.py --optim sam
+python train_rand.py --optim sam
 python train_rand.py --optim sam
 # python train.py --optim sam --steps 3
 # python train.py --optim sam --steps 3
