@@ -4,7 +4,8 @@ import torch
 #from models.model_factory import MODEL_GETTERS
 from models.wrn import WideResNet
 from models.smooth_cross_entropy import smooth_crossentropy
-from data.cifar10 import Cifar10
+#from data.cifar10 import Cifar10
+from data.cifar100 import Cifar100
 from utility.log import Log
 from utility.initialize import initialize
 from utility.step_lr import StepLR
@@ -39,11 +40,11 @@ if __name__ == "__main__":
     initialize(args, seed=42)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    dataset = Cifar10(args.batch_size, args.threads)
+    dataset = Cifar100(args.batch_size, args.threads)
     log = Log(log_each=10)
     # model = MODEL_GETTERS[args.model](
     #     num_classes=args.num_classes, pretrained=False).to(device)
-    model = WideResNet(args.depth, args.width_factor, args.dropout, in_channels=3, labels=10).to(device)
+    model = WideResNet(args.depth, args.width_factor, args.dropout, in_channels=3, labels=100).to(device)
     base_optimizer = torch.optim.SGD
     # optimizer = SAM(model.parameters(), base_optimizer, rho=args.rho, adaptive=args.adaptive, lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
 
